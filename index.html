@@ -1,2 +1,129 @@
-# case-report
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>個案狀況主動回報系統</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #f8f9fa; font-family: "Microsoft JhengHei", sans-serif; }
+        .card { border-radius: 12px; margin-bottom: 20px; border: none; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .card-header { background-color: #4CAF50; color: white; border-radius: 12px 12px 0 0 !important; font-weight: bold; }
+        .urgency-radio input[type="radio"] { display: none; }
+        .urgency-radio label { cursor: pointer; padding: 10px; border: 2px solid #ddd; border-radius: 8px; display: block; margin-bottom: 10px; }
+        .urgency-radio input[type="radio"]:checked + label { border-color: #4CAF50; background-color: #e8f5e9; }
+    </style>
+</head>
+<body>
+<div class="container py-4">
+    <h2 class="text-center mb-4">個案近期狀況回報</h2>
+    
+    <!-- 替換 ACTION_URL 為 Formspree 的專屬連結 -->
+    <form action="ACTION_URL" method="POST">
+        
+        <!-- 基本資訊 -->
+        <div class="card">
+            <div class="card-header">基本資訊</div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label class="form-label">個案編號 (系統自動帶入)</label>
+                    <input type="text" class="form-control" id="case_id" name="個案編號" readonly>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">長輩姓名</label>
+                    <input type="text" class="form-control" name="長輩姓名" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">填寫人 / 與個案關係</label>
+                    <input type="text" class="form-control" name="填寫人關係" placeholder="例如：王小明 / 兒子" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">聯絡電話</label>
+                    <input type="tel" class="form-control" name="聯絡電話" required>
+                </div>
+            </div>
+        </div>
+
+        <!-- 家屬回覆急迫性與時間 -->
+        <div class="card border-warning">
+            <div class="card-header bg-warning text-dark">聯繫急迫性與時間 (解決佔線痛點)</div>
+            <div class="card-body">
+                <label class="form-label fw-bold">本次填寫事由急迫性：</label>
+                <div class="urgency-radio">
+                    <input type="radio" id="urg1" name="急迫性" value="例行回報">
+                    <label for="urg1">🟢 例行狀況回報（目前狀況穩定，無需個管回電）</label>
+                    
+                    <input type="radio" id="urg2" name="急迫性" value="一般討論">
+                    <label for="urg2">🟡 一般事項討論（有服務或個案狀況想與個管討論）</label>
+                    
+                    <input type="radio" id="urg3" name="急迫性" value="緊急協助">
+                    <label for="urg3">🔴 緊急需協助（個案有突發狀況或重大服務變更，需儘速聯繫）</label>
+                </div>
+                <div class="mb-3 mt-3">
+                    <label class="form-label fw-bold">方便個管回電的時間區間：</label>
+                    <select class="form-select" name="方便回電時間">
+                        <option value="無需回電">無需回電</option>
+                        <option value="09:00-12:00">早上 09:00-12:00</option>
+                        <option value="14:00-17:00">下午 14:00-17:00</option>
+                        <option value="18:00-21:00">晚上 18:00-21:00</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- 一、身體健康狀況 -->
+        <div class="card">
+            <div class="card-header">一、身體健康狀況</div>
+            <div class="card-body">
+                <label class="form-label">目前狀況 (可複選)：</label>
+                <div class="form-check"><input class="form-check-input" type="checkbox" name="健康狀況[]" value="穩定"><label class="form-check-label">穩定</label></div>
+                <div class="form-check"><input class="form-check-input" type="checkbox" name="健康狀況[]" value="發燒/感冒"><label class="form-check-label">發燒/感冒</label></div>
+                <div class="form-check"><input class="form-check-input" type="checkbox" name="健康狀況[]" value="腸胃不適"><label class="form-check-label">腸胃不適</label></div>
+                <div class="form-check"><input class="form-check-input" type="checkbox" name="健康狀況[]" value="皮膚狀況"><label class="form-check-label">皮膚狀況 (破皮/紅疹)</label></div>
+                <div class="form-check"><input class="form-check-input" type="checkbox" name="健康狀況[]" value="血壓或血糖不穩"><label class="form-check-label">血壓或血糖不穩定</label></div>
+                <div class="mb-3 mt-2">
+                    <label class="form-label">近期就醫狀況 (近一週內是否有門診/急診/住院)：</label>
+                    <textarea class="form-control" name="就醫狀況說明" rows="2" placeholder="無，或請簡述..."></textarea>
+                </div>
+            </div>
+        </div>
+
+        <!-- 居家安全與用藥風險 -->
+        <div class="card">
+            <div class="card-header">安全與用藥風險預警</div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label class="form-label">近期是否有跌倒、絆倒或差點跌倒？</label>
+                    <select class="form-select" name="跌倒紀錄">
+                        <option value="否">否</option>
+                        <option value="是">是</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">目前用藥狀況：</label>
+                    <select class="form-select" name="用藥狀況">
+                        <option value="按時服藥">按時服藥</option>
+                        <option value="藥物剩餘過多">藥物剩餘過多 (漏吃)</option>
+                        <option value="自行停藥或重複就醫">有自行停藥或重複就醫開藥情形</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- 送出按鈕 -->
+        <div class="d-grid gap-2 mb-5">
+            <button class="btn btn-success btn-lg" type="submit">送出回報資料</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    // 透過網址參數預填個案編號，例如：網址結尾加上 ?caseid=A123456789
+    const urlParams = new URLSearchParams(window.location.search);
+    if(urlParams.has('caseid')) {
+        document.getElementById('case_id').value = urlParams.get('caseid');
+    }
+</script>
+</body>
+</html># case-report
 longcare work
