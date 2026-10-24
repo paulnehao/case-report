@@ -12,14 +12,17 @@
         .urgency-radio input[type="radio"] { display: none; }
         .urgency-radio label { cursor: pointer; padding: 10px; border: 2px solid #ddd; border-radius: 8px; display: block; margin-bottom: 10px; }
         .urgency-radio input[type="radio"]:checked + label { border-color: #4CAF50; background-color: #e8f5e9; }
+        
+        /* 隱藏連動區塊的預設樣式 */
+        .conditional-field { display: none; margin-top: 10px; padding: 10px; background-color: #f1f8e9; border-radius: 8px; border-left: 4px solid #4CAF50; }
     </style>
 </head>
 <body>
 <div class="container py-4">
     <h2 class="text-center mb-4">個案近期狀況回報</h2>
     
-    <!-- 替換 ACTION_URL 為 Formspree 的專屬連結 -->
-    <form action="ACTION_URL" method="POST">
+    <!-- 已更新為您的 Formspree 連結 -->
+    <form action="https://formspree.io/f/mvkkggvn" method="POST">
         
         <!-- 基本資訊 -->
         <div class="card">
@@ -44,13 +47,13 @@
             </div>
         </div>
 
-        <!-- 家屬回覆急迫性與時間 -->
+        <!-- 聯繫急迫性與時間 -->
         <div class="card border-warning">
-            <div class="card-header bg-warning text-dark">聯繫急迫性與時間 (解決佔線痛點)</div>
+            <div class="card-header bg-warning text-dark">聯繫急迫性與時間</div>
             <div class="card-body">
                 <label class="form-label fw-bold">本次填寫事由急迫性：</label>
                 <div class="urgency-radio">
-                    <input type="radio" id="urg1" name="急迫性" value="例行回報">
+                    <input type="radio" id="urg1" name="急迫性" value="例行回報" required>
                     <label for="urg1">🟢 例行狀況回報（目前狀況穩定，無需個管回電）</label>
                     
                     <input type="radio" id="urg2" name="急迫性" value="一般討論">
@@ -88,9 +91,49 @@
             </div>
         </div>
 
+        <!-- 二、睡眠與情緒狀況 -->
+        <div class="card">
+            <div class="card-header">二、睡眠與情緒狀況</div>
+            <div class="card-body">
+                <label class="form-label">睡眠品質：</label>
+                <select class="form-select mb-3" name="睡眠品質">
+                    <option value="穩定">穩定</option>
+                    <option value="入睡困難">入睡困難</option>
+                    <option value="夜間易醒">夜間易醒</option>
+                    <option value="日夜顛倒">日夜顛倒</option>
+                </select>
+                <label class="form-label">情緒與精神狀態：</label>
+                <select class="form-select" name="情緒狀態">
+                    <option value="平穩">情緒平穩</option>
+                    <option value="低落">心情低落</option>
+                    <option value="焦慮躁動">焦慮躁動 / 易怒</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- 三、飲食與吞嚥安全 -->
+        <div class="card">
+            <div class="card-header">三、飲食與吞嚥安全</div>
+            <div class="card-body">
+                <label class="form-label">食慾與進食量：</label>
+                <select class="form-select mb-3" name="食慾與進食量">
+                    <option value="正常">正常</option>
+                    <option value="食慾佳">食慾佳</option>
+                    <option value="較平時減少">較平時減少</option>
+                    <option value="明顯進食困難">明顯進食困難</option>
+                </select>
+                <label class="form-label text-danger fw-bold">吞嚥與飲水安全 (關鍵指標)：</label>
+                <select class="form-select" name="吞嚥安全">
+                    <option value="無異常">無異常</option>
+                    <option value="偶有嗆咳">偶有嗆咳</option>
+                    <option value="吞嚥困難">吞嚥困難</option>
+                </select>
+            </div>
+        </div>
+
         <!-- 居家安全與用藥風險 -->
         <div class="card">
-            <div class="card-header">安全與用藥風險預警</div>
+            <div class="card-header">四、安全與用藥風險預警</div>
             <div class="card-body">
                 <div class="mb-3">
                     <label class="form-label">近期是否有跌倒、絆倒或差點跌倒？</label>
@@ -110,6 +153,35 @@
             </div>
         </div>
 
+        <!-- 照顧者負荷 -->
+        <div class="card">
+            <div class="card-header">五、照顧者支持與需求</div>
+            <div class="card-body">
+                <label class="form-label">照顧者自我感覺：</label>
+                <select class="form-select mb-3" name="照顧者負荷">
+                    <option value="負荷尚可">負荷尚可</option>
+                    <option value="感到疲憊身心俱疲">感到疲憊身心俱疲</option>
+                    <option value="需要尋求諮詢或心理支持">需要尋求諮詢或心理支持</option>
+                </select>
+                
+                <label class="form-label">是否需要調整服務或申請喘息？</label>
+                <select class="form-select" id="service_adjust" name="服務調整需求" onchange="toggleServiceFields()">
+                    <option value="無">目前不需要</option>
+                    <option value="需要">需要討論服務調整或喘息</option>
+                </select>
+
+                <!-- 連動展開區塊 -->
+                <div id="service_details" class="conditional-field">
+                    <label class="form-label">需求類別 (可複選)：</label>
+                    <div class="form-check"><input class="form-check-input" type="checkbox" name="調整細項[]" value="增減服務項目"><label class="form-check-label">增減服務項目</label></div>
+                    <div class="form-check"><input class="form-check-input" type="checkbox" name="調整細項[]" value="調整服務時間"><label class="form-check-label">調整服務時間</label></div>
+                    <div class="form-check"><input class="form-check-input" type="checkbox" name="調整細項[]" value="居家喘息"><label class="form-check-label">申請居家喘息</label></div>
+                    <div class="form-check"><input class="form-check-input" type="checkbox" name="調整細項[]" value="機構喘息"><label class="form-check-label">申請機構喘息</label></div>
+                    <input type="text" class="form-control mt-2" name="需求備註" placeholder="請簡述希望的日期、時段或單位">
+                </div>
+            </div>
+        </div>
+
         <!-- 送出按鈕 -->
         <div class="d-grid gap-2 mb-5">
             <button class="btn btn-success btn-lg" type="submit">送出回報資料</button>
@@ -118,12 +190,22 @@
 </div>
 
 <script>
-    // 透過網址參數預填個案編號，例如：網址結尾加上 ?caseid=A123456789
+    // 預填個案編號
     const urlParams = new URLSearchParams(window.location.search);
     if(urlParams.has('caseid')) {
         document.getElementById('case_id').value = urlParams.get('caseid');
     }
+
+    // 控制服務需求連動區塊的顯示/隱藏
+    function toggleServiceFields() {
+        const selectBox = document.getElementById("service_adjust");
+        const detailSection = document.getElementById("service_details");
+        if (selectBox.value === "需要") {
+            detailSection.style.display = "block";
+        } else {
+            detailSection.style.display = "none";
+        }
+    }
 </script>
 </body>
-</html># case-report
-longcare work
+</html>
