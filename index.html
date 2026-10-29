@@ -286,7 +286,7 @@
                             </div>
                         </div>
 
-                        <!-- 七、喘息需求 (依需求優化：文字輸入 或 日曆/24小時點選) -->
+                        <!-- 七、喘息需求 -->
                         <div class="mb-5">
                             <h4 class="section-title"><i class="fa-solid fa-calendar-check me-2"></i>七、喘息需求</h4>
                             <div class="d-flex flex-column gap-3">
@@ -294,7 +294,7 @@
                                     <input class="form-check-input" type="radio" name="喘息需求" id="respite1" value="有">
                                     <label class="form-check-label" for="respite1">1. 有 (請個管回電討論)</label>
                                     
-                                    <!-- 選擇「有」之後展開的 2 個子選項 -->
+                                    <!-- 選擇「有」之後展開的子選項區塊 -->
                                     <div class="conditional-box" id="box-respite">
                                         <p class="fw-bold small text-teal mb-2">請選擇您偏好的聯繫預約方式：</p>
                                         
@@ -409,7 +409,15 @@
         respiteRadios.forEach(radio => {
             radio.addEventListener('change', function() {
                 const box = document.getElementById('box-respite');
-                box.style.display = (this.id === 'respite1') ? 'block' : 'none';
+                if (this.id === 'respite1') {
+                    box.style.display = 'block';
+                    // 同步預設勾選第一個子選項 (文字描述)
+                    document.getElementById('respiteType1').checked = true;
+                    document.getElementById('subBox-text').classList.remove('d-none');
+                    document.getElementById('subBox-datetime').classList.add('d-none');
+                } else {
+                    box.style.display = 'none';
+                }
             });
         });
 
@@ -476,3 +484,9 @@
             document.getElementById('formCard').style.display = 'block';
             const submitBtn = document.getElementById('submitBtn');
             submitBtn.disabled = false;
+            submitBtn.innerHTML = '<i class="fa-solid fa-paper-plane me-2"></i>確認無誤，送出回饋';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
