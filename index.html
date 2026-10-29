@@ -64,6 +64,7 @@
             padding: 1rem;
             border-radius: 0.5rem;
             margin-top: 0.75rem;
+            display: none; /* 預設隱藏 */
         }
         .success-overlay {
             display: none;
@@ -79,7 +80,7 @@
                 <i class="fa-solid fa-hands-holding-child me-1 text-teal"></i> 家屬溫馨連線與關懷回饋
             </span>
             <h1 class="h3 fw-bold mb-2">長輩健康與服務使用狀況填報</h1>
-            <p class="mb-0 text-light opacity-75">免去電話聯繫的等候，主動線上通知</p>
+            <p class="mb-0 text-light opacity-75">免去電話聯繫的等候，主動線上回報</p>
         </div>
     </div>
 
@@ -109,12 +110,12 @@
                                     <select class="form-select" id="relationSelect" name="填寫人與個案關係" required>
                                         <option value="" selected disabled>請選擇關係</option>
                                         <option value="配偶">配偶</option>
-                                        <option value="案子">案子</option>
-                                        <option value="案女">案女</option>
+                                        <option value="案子">案子 (兒子)</option>
+                                        <option value="案女">案女 (女兒)</option>
                                         <option value="其他">其他</option>
                                     </select>
                                     <!-- 選擇「其他」時跳出的自訂輸入框 -->
-                                    <div class="mt-2 d-none" id="otherRelationDiv">
+                                    <div class="mt-2" id="otherRelationDiv" style="display: none;">
                                         <input type="text" class="form-control" id="otherRelationInput" name="填寫人關係其他說明" placeholder="請註明與個案關係（例如：媳婦、孫女）">
                                     </div>
                                 </div>
@@ -137,7 +138,7 @@
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" name="身體健康狀況" id="health2" value="微恙">
                                     <label class="form-check-label" for="health2">2. 微恙 (小病痛)</label>
-                                    <div class="conditional-box d-none" id="box-health2">
+                                    <div class="conditional-box" id="box-health2">
                                         <input type="text" class="form-control" name="微恙說明" placeholder="請簡述微恙狀況（例如：輕微感冒、流鼻水）">
                                     </div>
                                 </div>
@@ -145,7 +146,7 @@
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" name="身體健康狀況" id="health3" value="新病症">
                                     <label class="form-check-label" for="health3">3. 新病症</label>
-                                    <div class="conditional-box d-none" id="box-health3">
+                                    <div class="conditional-box" id="box-health3">
                                         <input type="text" class="form-control" name="新病症疾病" placeholder="請填寫新發生之疾病名稱">
                                     </div>
                                 </div>
@@ -153,7 +154,7 @@
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" name="身體健康狀況" id="health4" value="急診">
                                     <label class="form-check-label" for="health4">4. 急診</label>
-                                    <div class="conditional-box d-none" id="box-health4">
+                                    <div class="conditional-box" id="box-health4">
                                         <input type="text" class="form-control" name="急診疾病原因" placeholder="請填寫送急診之疾病或原因">
                                     </div>
                                 </div>
@@ -161,7 +162,7 @@
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" name="身體健康狀況" id="health5" value="其他">
                                     <label class="form-check-label" for="health5">5. 其他</label>
-                                    <div class="conditional-box d-none" id="box-health5">
+                                    <div class="conditional-box" id="box-health5">
                                         <input type="text" class="form-control" name="身體狀況其他說明" placeholder="請填寫其他身體狀況說明">
                                     </div>
                                 </div>
@@ -187,7 +188,7 @@
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" name="生活作息" id="routine4" value="其他">
                                     <label class="form-check-label" for="routine4">4. 其他</label>
-                                    <div class="conditional-box d-none" id="box-routine4">
+                                    <div class="conditional-box" id="box-routine4">
                                         <input type="text" class="form-control" name="生活作息其他說明" placeholder="請填寫其他生活作息狀況">
                                     </div>
                                 </div>
@@ -231,7 +232,7 @@
                             </div>
                         </div>
 
-                        <!-- 四、疼痛情形 (新增：選擇「有(新的疼痛)」時展開填寫欄位) -->
+                        <!-- 四、疼痛情形 -->
                         <div class="mb-5">
                             <h4 class="section-title"><i class="fa-solid fa-face-frown-open me-2"></i>四、疼痛情形</h4>
                             <div class="d-flex flex-column gap-3">
@@ -246,8 +247,8 @@
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" name="疼痛情形" id="pain3" value="有(新的疼痛)">
                                     <label class="form-check-label" for="pain3">3. 有 (新的疼痛)</label>
-                                    <!-- 新疼痛說明輸入框 -->
-                                    <div class="conditional-box d-none" id="box-pain3">
+                                    <!-- 新增：新疼痛說明輸入框 -->
+                                    <div class="conditional-box" id="box-pain3">
                                         <input type="text" class="form-control" name="新疼痛說明" placeholder="請填寫疼痛部位及狀況（例如：腰部痠痛、關節疼痛等）">
                                     </div>
                                 </div>
@@ -298,7 +299,7 @@
                                     <label class="form-check-label" for="respite1">1. 有 (請個管回電討論)</label>
                                     
                                     <!-- 選擇「有」之後展開的子選項區塊 -->
-                                    <div class="conditional-box d-none" id="box-respite">
+                                    <div class="conditional-box" id="box-respite">
                                         <p class="fw-bold small text-teal mb-2">請選擇您偏好的聯繫預約方式：</p>
                                         
                                         <!-- 子選項 (1)：文字輸入欄位 -->
@@ -306,7 +307,7 @@
                                             <input class="form-check-input" type="radio" name="喘息聯繫方式" id="respiteType1" value="文字描述時段" checked>
                                             <label class="form-check-label small" for="respiteType1">(1) 希望聯繫日期 / 時段（文字描述）</label>
                                         </div>
-                                        <div class="mb-3" id="subBox-text">
+                                        <div class="mb-3" id="subBox-text" style="display: block;">
                                             <input type="text" class="form-control" name="喘息希望聯繫日期時段文字" placeholder="例如：下週一上午、或隨時皆可">
                                         </div>
 
@@ -315,7 +316,7 @@
                                             <input class="form-check-input" type="radio" name="喘息聯繫方式" id="respiteType2" value="精確日期時間">
                                             <label class="form-check-label small" for="respiteType2">(2) 家屬直接點選需要日期及時間 (日曆/24小時制)</label>
                                         </div>
-                                        <div class="row g-2 d-none" id="subBox-datetime">
+                                        <div class="row g-2" id="subBox-datetime" style="display: none;">
                                             <div class="col-md-7">
                                                 <label class="form-label text-muted small">選擇日期：</label>
                                                 <input type="date" class="form-control" name="喘息預約日期">
@@ -344,7 +345,7 @@
                     </form>
                 </div>
 
-                <!-- 提交成功後的畫面 (隱藏狀態) -->
+                <!-- 提交成功後的畫面 -->
                 <div class="card card-custom p-5 text-center bg-white success-overlay" id="successCard">
                     <div class="mb-4 text-teal">
                         <i class="fa-solid fa-circle-check fa-4x text-success"></i>
@@ -365,101 +366,147 @@
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        // 共用顯示/隱藏函數，確保絕對有效
+        function showEl(id, displayType = 'block') {
+            const el = document.getElementById(id);
+            if (el) el.style.display = displayType;
+        }
+        function hideEl(id) {
+            const el = document.getElementById(id);
+            if (el) el.style.display = 'none';
+        }
+
         // 自動帶入今天日期
         document.getElementById('fillDate').valueAsDate = new Date();
 
-        // 填寫人與個案關係：選擇「其他」時顯示自訂輸入框
+        // 填寫人與個案關係：選擇「其他」
         const relationSelect = document.getElementById('relationSelect');
-        const otherRelationDiv = document.getElementById('otherRelationDiv');
         const otherRelationInput = document.getElementById('otherRelationInput');
-
         relationSelect.addEventListener('change', function() {
             if(this.value === '其他') {
-                otherRelationDiv.classList.remove('d-none');
+                showEl('otherRelationDiv');
                 otherRelationInput.setAttribute('required', 'required');
             } else {
-                otherRelationDiv.classList.add('d-none');
+                hideEl('otherRelationDiv');
                 otherRelationInput.removeAttribute('required');
                 otherRelationInput.value = '';
             }
         });
 
-        // 動態顯示/隱藏補充欄位 (身體健康狀況)
+        // 身體健康狀況
         const healthRadios = document.querySelectorAll('input[name="身體健康狀況"]');
         healthRadios.forEach(radio => {
             radio.addEventListener('change', function() {
-                document.querySelectorAll('#box-health2, #box-health3, #box-health4, #box-health5').forEach(box => {
-                    box.classList.add('d-none');
-                });
-                if(this.id === 'health2') document.getElementById('box-health2').classList.remove('d-none');
-                if(this.id === 'health3') document.getElementById('box-health3').classList.remove('d-none');
-                if(this.id === 'health4') document.getElementById('box-health4').classList.remove('d-none');
-                if(this.id === 'health5') document.getElementById('box-health5').classList.remove('d-none');
+                hideEl('box-health2'); hideEl('box-health3'); hideEl('box-health4'); hideEl('box-health5');
+                if(this.id === 'health2') showEl('box-health2');
+                if(this.id === 'health3') showEl('box-health3');
+                if(this.id === 'health4') showEl('box-health4');
+                if(this.id === 'health5') showEl('box-health5');
             });
         });
 
-        // 動態顯示/隱藏生活作息其他框
+        // 生活作息
         const routineRadios = document.querySelectorAll('input[name="生活作息"]');
         routineRadios.forEach(radio => {
             radio.addEventListener('change', function() {
-                const box = document.getElementById('box-routine4');
-                if(this.id === 'routine4') {
-                    box.classList.remove('d-none');
-                } else {
-                    box.classList.add('d-none');
-                }
+                if(this.id === 'routine4') showEl('box-routine4');
+                else hideEl('box-routine4');
             });
         });
 
-        // 疼痛情形：選擇「有(新的疼痛)」時顯示輸入框
+        // 疼痛情形 (新增：有新的疼痛展開說明)
         const painRadios = document.querySelectorAll('input[name="疼痛情形"]');
         painRadios.forEach(radio => {
             radio.addEventListener('change', function() {
-                const painBox = document.getElementById('box-pain3');
-                if(this.id === 'pain3') {
-                    painBox.classList.remove('d-none');
-                } else {
-                    painBox.classList.add('d-none');
-                }
+                if(this.id === 'pain3') showEl('box-pain3');
+                else hideEl('box-pain3');
             });
         });
 
-        // 喘息需求：勾選「有」時顯示細節區塊
+        // 喘息需求 (修正：點選有時確實展開)
         const respiteRadios = document.querySelectorAll('input[name="喘息需求"]');
         respiteRadios.forEach(radio => {
             radio.addEventListener('change', function() {
-                const box = document.getElementById('box-respite');
                 if (this.id === 'respite1') {
-                    box.classList.remove('d-none');
+                    showEl('box-respite');
                     document.getElementById('respiteType1').checked = true;
-                    document.getElementById('subBox-text').classList.remove('d-none');
-                    document.getElementById('subBox-datetime').classList.add('d-none');
+                    showEl('subBox-text');
+                    hideEl('subBox-datetime');
                 } else {
-                    box.classList.add('d-none');
+                    hideEl('box-respite');
                 }
             });
         });
 
-        // 喘息需求內部：切換 (1) 文字輸入 vs (2) 日曆/24小時制
+        // 喘息需求內部：(1) 文字輸入 vs (2) 日曆/時間
         const respiteTypeRadios = document.querySelectorAll('input[name="喘息聯繫方式"]');
         respiteTypeRadios.forEach(radio => {
             radio.addEventListener('change', function() {
-                const subText = document.getElementById('subBox-text');
-                const subDatetime = document.getElementById('subBox-datetime');
                 if(this.id === 'respiteType1') {
-                    subText.classList.remove('d-none');
-                    subDatetime.classList.add('d-none');
+                    showEl('subBox-text');
+                    hideEl('subBox-datetime');
                 } else {
-                    subText.classList.add('d-none');
-                    subDatetime.classList.remove('d-none');
+                    hideEl('subBox-text');
+                    showEl('subBox-datetime', 'flex'); // row 需使用 flex 才能保持排版
                 }
             });
         });
 
-        // Formspree 非同步 AJAX 提交處理
+        // Formspree AJAX 提交處理
         const form = document.getElementById('feedbackForm');
         form.addEventListener('submit', async function(e) {
             e.preventDefault();
             const submitBtn = document.getElementById('submitBtn');
             submitBtn.disabled = true;
-            submitBtn.innerHTML = '<i class="fa-solid fa-spinner
+            submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-2"></i>傳送中...';
+
+            const formData = new FormData(form);
+
+            try {
+                const response = await fetch(form.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: { 'Accept': 'application/json' }
+                });
+
+                if (response.ok) {
+                    hideEl('formCard');
+                    showEl('successCard');
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                } else {
+                    alert('送出時發生錯誤，請稍後再試或直接聯繫個管員。');
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '<i class="fa-solid fa-paper-plane me-2"></i>確認無誤，送出回饋';
+                }
+            } catch (error) {
+                alert('網路連線異常，請檢查您的網路狀態。');
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fa-solid fa-paper-plane me-2"></i>確認無誤，送出回饋';
+            }
+        });
+
+        // 重置表單畫面
+        function resetForm() {
+            form.reset();
+            document.getElementById('fillDate').valueAsDate = new Date();
+            
+            // 隱藏所有展開區塊
+            hideEl('otherRelationDiv');
+            hideEl('box-health2'); hideEl('box-health3'); hideEl('box-health4'); hideEl('box-health5');
+            hideEl('box-routine4');
+            hideEl('box-pain3');
+            hideEl('box-respite');
+            showEl('subBox-text');
+            hideEl('subBox-datetime');
+            
+            hideEl('successCard');
+            showEl('formCard');
+            
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<i class="fa-solid fa-paper-plane me-2"></i>確認無誤，送出回饋';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
