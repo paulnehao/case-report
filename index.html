@@ -33,9 +33,34 @@
                 <input type="text" class="form-control" id="caseName" name="個案姓名" required>
               </div>
 
-              <!-- 聯絡信箱 -->
+              <!-- 聯絡方式選擇 (新增：顧慮個資優化) -->
               <div class="mb-3">
-                <label for="email" class="form-label">聯絡信箱 (選填，若需回覆請務必填寫)</label>
+                <label class="form-label fw-bold">希望個管員如何與您聯繫？</label>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="聯繫方式選擇" id="callMobile" value="致電行動電話" required>
+                  <label class="form-check-label" for="callMobile">致電行動電話</label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="聯繫方式選擇" id="callLandline" value="致電室內電話">
+                  <label class="form-check-label" for="callLandline">致電室內電話</label>
+                </div>
+              </div>
+
+              <!-- 動態顯示：行動電話輸入框 -->
+              <div class="mb-3 d-none" id="mobileDiv">
+                <label for="mobileInput" class="form-label">請填寫行動電話</label>
+                <input type="tel" class="form-control" id="mobileInput" name="行動電話">
+              </div>
+
+              <!-- 動態顯示：室內電話輸入框 -->
+              <div class="mb-3 d-none" id="landlineDiv">
+                <label for="landlineInput" class="form-label">請填寫室內電話 (含區碼)</label>
+                <input type="tel" class="form-control" id="landlineInput" name="室內電話" placeholder="例如：07-1234567">
+              </div>
+
+              <!-- 聯絡信箱 (選填) -->
+              <div class="mb-3">
+                <label for="email" class="form-label">聯絡信箱 (選填)</label>
                 <input type="email" class="form-control" id="email" name="email">
               </div>
 
@@ -82,7 +107,34 @@
   <script>
     document.addEventListener("DOMContentLoaded", function() {
       
-      // --- 1. 下拉選單動態顯示「其他」欄位邏輯 ---
+      // --- 1. 電話選項動態切換邏輯 ---
+      const callMobile = document.getElementById("callMobile");
+      const callLandline = document.getElementById("callLandline");
+      const mobileDiv = document.getElementById("mobileDiv");
+      const landlineDiv = document.getElementById("landlineDiv");
+      const mobileInput = document.getElementById("mobileInput");
+      const landlineInput = document.getElementById("landlineInput");
+
+      function updatePhoneFields() {
+        if (callMobile.checked) {
+          mobileDiv.classList.remove("d-none");
+          mobileInput.setAttribute("required", "");
+          landlineDiv.classList.add("d-none");
+          landlineInput.removeAttribute("required");
+          landlineInput.value = "";
+        } else if (callLandline.checked) {
+          landlineDiv.classList.remove("d-none");
+          landlineInput.setAttribute("required", "");
+          mobileDiv.classList.add("d-none");
+          mobileInput.removeAttribute("required");
+          mobileInput.value = "";
+        }
+      }
+
+      callMobile.addEventListener("change", updatePhoneFields);
+      callLandline.addEventListener("change", updatePhoneFields);
+
+      // --- 2. 下拉選單動態顯示「其他」欄位邏輯 ---
       const caseStatusSelect = document.getElementById("caseStatus");
       const otherStatusDiv = document.getElementById("otherStatusDiv");
       const otherStatusInput = document.getElementById("otherStatus");
@@ -98,7 +150,7 @@
         }
       });
 
-      // --- 2. AJAX 不跳轉送出邏輯 ---
+      // --- 3. AJAX 不跳轉送出邏輯 (含 2 秒後自動跳轉) ---
       const form = document.getElementById("my-form");
       const status = document.getElementById("my-form-status");
 
@@ -106,7 +158,6 @@
         event.preventDefault();
         const data = new FormData(event.target);
         
-        // 改變按鈕狀態避免重複點擊
         const btn = form.querySelector('button[type="submit"]');
         btn.disabled = true;
         btn.innerText = "處理中...";
@@ -117,12 +168,23 @@
           headers: { 'Accept': 'application/json' }
         }).then(response => {
           if (response.ok) {
-            status.innerHTML = "回報已成功送出！我們會盡快處理。";
+            status.innerHTML = "回報已成功送出！將於 2 秒後自動返回單位首頁...";
             status.className = "mt-3 text-center fw-bold text-success";
             form.reset();
+            
             // 重置動態欄位狀態
             otherStatusDiv.classList.add("d-none");
             otherStatusInput.removeAttribute("required");
+            mobileDiv.classList.add("d-none");
+            mobileInput.removeAttribute("required");
+            landlineDiv.classList.add("d-none");
+            landlineInput.removeAttribute("required");
+            
+            // 延遲 2 秒後自動跳轉 (請將網址替換為您的單位網頁)
+            setTimeout(function() {
+                window.location.href = "https://你的長照單位網址.com";
+            }, 2000);
+
           } else {
             response.json().then(data => {
               if (Object.hasOwn(data, 'errors')) {
@@ -137,7 +199,6 @@
           status.innerHTML = "糟糕！送出表單時發生網路問題。";
           status.className = "mt-3 text-center fw-bold text-danger";
         }).finally(() => {
-          // 恢復按鈕狀態
           btn.disabled = false;
           btn.innerText = "送出回報";
         });
