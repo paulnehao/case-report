@@ -110,8 +110,8 @@
                                     <select class="form-select" id="relationSelect" name="填寫人與個案關係" required>
                                         <option value="" selected disabled>請選擇關係</option>
                                         <option value="配偶">配偶</option>
-                                        <option value="案子">案子</option>
-                                        <option value="案女">案女</option>
+                                        <option value="案子">案子 (兒子)</option>
+                                        <option value="案女">案女 (女兒)</option>
                                         <option value="其他">其他</option>
                                     </select>
                                     <!-- 選擇「其他」時跳出的自訂輸入框 -->
@@ -120,7 +120,7 @@
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <label for="unit" class="form-label fw-bold">使用服務/ 據點</label>
+                                    <label for="unit" class="form-label fw-bold">指定單位 / 據點</label>
                                     <input type="text" class="form-control" id="unit" name="指定單位" placeholder="例如：日照中心 / 居家服務單位">
                                 </div>
                             </div>
@@ -298,33 +298,46 @@
                                     <input class="form-check-input" type="radio" name="喘息需求" id="respite1" value="有">
                                     <label class="form-check-label" for="respite1">1. 有 (請個管回電討論)</label>
                                     
-                                    <!-- 選擇「有」之後展開的子選項區塊 -->
+                                    <!-- 選擇「有」之後展開的 3 個子選項區塊 -->
                                     <div class="conditional-box" id="box-respite">
-                                        <p class="fw-bold small text-teal mb-2">請選擇您偏好的聯繫預約方式：</p>
+                                        <p class="fw-bold small text-teal mb-2">請選擇您偏好的聯繫或預約方式：</p>
                                         
                                         <!-- 子選項 (1)：文字輸入欄位 -->
                                         <div class="form-check mb-2">
                                             <input class="form-check-input" type="radio" name="喘息聯繫方式" id="respiteType1" value="文字描述時段" checked>
                                             <label class="form-check-label small" for="respiteType1">(1) 希望聯繫日期 / 時段（文字描述）</label>
                                         </div>
-                                        <div class="mb-3" id="subBox-text" style="display: block;">
+                                        <div class="mb-3" id="subBox-text1" style="display: block;">
                                             <input type="text" class="form-control" name="喘息希望聯繫日期時段文字" placeholder="例如：下週一上午、或隨時皆可">
                                         </div>
 
-                                        <!-- 子選項 (2)：日曆 + 24小時制時間點選 -->
+                                        <!-- 子選項 (2)：日曆 + 包含起訖的24小時制 -->
                                         <div class="form-check mb-2">
                                             <input class="form-check-input" type="radio" name="喘息聯繫方式" id="respiteType2" value="精確日期時間">
-                                            <label class="form-check-label small" for="respiteType2">(2) 家屬直接點選需要日期及時間 (日曆/24小時制)</label>
+                                            <label class="form-check-label small" for="respiteType2">(2) 直接點選需要喘息的日期及時間 (日曆 / 起訖時間)</label>
                                         </div>
-                                        <div class="row g-2" id="subBox-datetime" style="display: none;">
-                                            <div class="col-md-7">
+                                        <div class="row g-2 mb-3" id="subBox-datetime" style="display: none;">
+                                            <div class="col-md-4">
                                                 <label class="form-label text-muted small">選擇日期：</label>
                                                 <input type="date" class="form-control" name="喘息預約日期">
                                             </div>
-                                            <div class="col-md-5">
-                                                <label class="form-label text-muted small">選擇時間 (24小時制)：</label>
-                                                <input type="time" class="form-control" name="喘息預約時間">
+                                            <div class="col-md-4">
+                                                <label class="form-label text-muted small">起始時間：</label>
+                                                <input type="time" class="form-control" name="喘息起始時間">
                                             </div>
+                                            <div class="col-md-4">
+                                                <label class="form-label text-muted small">結束時間：</label>
+                                                <input type="time" class="form-control" name="喘息結束時間">
+                                            </div>
+                                        </div>
+
+                                        <!-- 子選項 (3)：自行填寫空白格 -->
+                                        <div class="form-check mb-2">
+                                            <input class="form-check-input" type="radio" name="喘息聯繫方式" id="respiteType3" value="自行填寫日期時間">
+                                            <label class="form-check-label small" for="respiteType3">(3) 自行填寫需要的日期及時間 (空白格)</label>
+                                        </div>
+                                        <div class="mb-3" id="subBox-text2" style="display: none;">
+                                            <input type="text" class="form-control" name="喘息自行填寫日期時間" placeholder="請自由填寫您需要的喘息日期與時間區段">
                                         </div>
 
                                     </div>
@@ -332,6 +345,28 @@
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" name="喘息需求" id="respite2" value="無" checked>
                                     <label class="form-check-label" for="respite2">2. 無</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 八、照顧壓力調查 (新增) -->
+                        <div class="mb-5">
+                            <h4 class="section-title"><i class="fa-solid fa-scale-balanced me-2"></i>八、照顧壓力調查</h4>
+                            <div class="d-flex flex-column gap-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="照顧壓力調查" id="stress1" value="調適良好" checked>
+                                    <label class="form-check-label" for="stress1">🟢 <strong>【調適良好】</strong> 目前仍有能力克服照護上的問題。</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="照顧壓力調查" id="stress2" value="出現壓力徵兆">
+                                    <label class="form-check-label" for="stress2">🟡 <strong>【出現壓力徵兆】</strong> 處於體力或心理臨界點。</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="照顧壓力調查" id="stress3" value="負荷沉重">
+                                    <label class="form-check-label" for="stress3">
+                                        🔴 <strong>【負荷沉重】</strong> 心理、身體、經濟或社交已受到嚴重衝擊，處於高風險狀態。<br>
+                                        <span class="text-danger fw-bold small mt-1 d-inline-block"><i class="fa-solid fa-triangle-exclamation me-1"></i>強烈建議立即尋求外部專業協助（如撥打關懷專線0800-50-7272、尋求醫療諮商），以維持生活品質。</span>
+                                    </label>
                                 </div>
                             </div>
                         </div>
@@ -414,7 +449,7 @@
             });
         });
 
-        // 疼痛情形 (新增：有新的疼痛展開說明)
+        // 疼痛情形 
         const painRadios = document.querySelectorAll('input[name="疼痛情形"]');
         painRadios.forEach(radio => {
             radio.addEventListener('change', function() {
@@ -423,31 +458,37 @@
             });
         });
 
-        // 喘息需求 (修正：點選有時確實展開)
+        // 喘息需求
         const respiteRadios = document.querySelectorAll('input[name="喘息需求"]');
         respiteRadios.forEach(radio => {
             radio.addEventListener('change', function() {
                 if (this.id === 'respite1') {
                     showEl('box-respite');
+                    // 預設重置為第一個子選項
                     document.getElementById('respiteType1').checked = true;
-                    showEl('subBox-text');
+                    showEl('subBox-text1');
                     hideEl('subBox-datetime');
+                    hideEl('subBox-text2');
                 } else {
                     hideEl('box-respite');
                 }
             });
         });
 
-        // 喘息需求內部：(1) 文字輸入 vs (2) 日曆/時間
+        // 喘息需求內部：(1) 文字輸入 vs (2) 日曆/起訖時間 vs (3) 空白格自行填寫
         const respiteTypeRadios = document.querySelectorAll('input[name="喘息聯繫方式"]');
         respiteTypeRadios.forEach(radio => {
             radio.addEventListener('change', function() {
+                hideEl('subBox-text1');
+                hideEl('subBox-datetime');
+                hideEl('subBox-text2');
+
                 if(this.id === 'respiteType1') {
-                    showEl('subBox-text');
-                    hideEl('subBox-datetime');
-                } else {
-                    hideEl('subBox-text');
-                    showEl('subBox-datetime', 'flex'); // row 需使用 flex 才能保持排版
+                    showEl('subBox-text1');
+                } else if(this.id === 'respiteType2') {
+                    showEl('subBox-datetime', 'flex'); // row 需使用 flex 保持排版
+                } else if(this.id === 'respiteType3') {
+                    showEl('subBox-text2');
                 }
             });
         });
@@ -496,8 +537,9 @@
             hideEl('box-routine4');
             hideEl('box-pain3');
             hideEl('box-respite');
-            showEl('subBox-text');
+            showEl('subBox-text1');
             hideEl('subBox-datetime');
+            hideEl('subBox-text2');
             
             hideEl('successCard');
             showEl('formCard');
