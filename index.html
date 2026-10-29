@@ -1,210 +1,414 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>家屬近況回報系統</title>
-  <!-- 載入 Bootstrap 5 CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>長照家屬主動回饋與健康狀況填報系統</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google Fonts Inter & Noto Sans TC -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: #f0f4f8;
+            color: #334155;
+        }
+        .header-bg {
+            background: linear-gradient(135deg, #0d9488 0%, #0f766e 100%);
+            color: white;
+            border-radius: 0 0 1.5rem 1.5rem;
+            padding: 2.5rem 1rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        .card-custom {
+            border: none;
+            border-radius: 1rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+        .form-check-input:checked {
+            background-color: #0d9488;
+            border-color: #0d9488;
+        }
+        .form-control:focus, .form-select:focus {
+            border-color: #0d9488;
+            box-shadow: 0 0 0 0.25rem rgba(13, 148, 136, 0.25);
+        }
+        .btn-primary-custom {
+            background-color: #0d9488;
+            border-color: #0d9488;
+            color: white;
+            font-weight: 600;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.75rem;
+            transition: all 0.2s;
+        }
+        .btn-primary-custom:hover {
+            background-color: #0f766e;
+            border-color: #0f766e;
+            color: white;
+        }
+        .section-title {
+            font-weight: 700;
+            color: #115e59;
+            border-bottom: 2px solid #ccfbf1;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.25rem;
+        }
+        .conditional-box {
+            background-color: #f8fafc;
+            border-left: 4px solid #0d9488;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-top: 0.75rem;
+            display: none;
+        }
+        .success-overlay {
+            display: none;
+        }
+    </style>
 </head>
-<body class="bg-light">
+<body>
 
-  <div class="container mt-5 mb-5">
-    <div class="row justify-content-center">
-      <div class="col-md-8">
-        <div class="card shadow-sm">
-          <div class="card-header bg-primary text-white">
-            <h5 class="mb-0">家屬近況回報與問題詢問</h5>
-          </div>
-          <div class="card-body">
-            
-            <!-- 表單開始 -->
-            <form id="my-form" action="https://formspree.io/f/mvkkggvn" method="POST">
-              
-              <!-- 家屬姓名 -->
-              <div class="mb-3">
-                <label for="familyName" class="form-label">您的姓名 (家屬)</label>
-                <input type="text" class="form-control" id="familyName" name="家屬姓名" required>
-              </div>
-
-              <!-- 個案姓名 -->
-              <div class="mb-3">
-                <label for="caseName" class="form-label">個案姓名</label>
-                <input type="text" class="form-control" id="caseName" name="個案姓名" required>
-              </div>
-
-              <!-- 聯絡方式選擇 (新增：顧慮個資優化) -->
-              <div class="mb-3">
-                <label class="form-label fw-bold">希望個管員如何與您聯繫？</label>
-                <div class="form-check">
-                  <input class="form-check-input" type="radio" name="聯繫方式選擇" id="callMobile" value="致電行動電話" required>
-                  <label class="form-check-label" for="callMobile">致電行動電話</label>
-                </div>
-                <div class="form-check">
-                  <input class="form-check-input" type="radio" name="聯繫方式選擇" id="callLandline" value="致電室內電話">
-                  <label class="form-check-label" for="callLandline">致電室內電話</label>
-                </div>
-              </div>
-
-              <!-- 動態顯示：行動電話輸入框 -->
-              <div class="mb-3 d-none" id="mobileDiv">
-                <label for="mobileInput" class="form-label">請填寫行動電話</label>
-                <input type="tel" class="form-control" id="mobileInput" name="行動電話">
-              </div>
-
-              <!-- 動態顯示：室內電話輸入框 -->
-              <div class="mb-3 d-none" id="landlineDiv">
-                <label for="landlineInput" class="form-label">請填寫室內電話 (含區碼)</label>
-                <input type="tel" class="form-control" id="landlineInput" name="室內電話" placeholder="例如：07-1234567">
-              </div>
-
-              <!-- 聯絡信箱 (選填) -->
-              <div class="mb-3">
-                <label for="email" class="form-label">聯絡信箱 (選填)</label>
-                <input type="email" class="form-control" id="email" name="email">
-              </div>
-
-              <!-- 個案目前狀況 (下拉式選單) -->
-              <div class="mb-3">
-                <label for="caseStatus" class="form-label">個案目前狀況</label>
-                <select class="form-select" id="caseStatus" name="個案目前狀況" required>
-                  <option value="" selected disabled>請選擇最符合的狀況</option>
-                  <option value="狀況穩定，維持目前服務">狀況穩定，維持目前服務</option>
-                  <option value="近期有就醫或出入醫院，需調整服務">近期有就醫或出入醫院，需調整服務</option>
-                  <option value="個案體況改變，希望評估增加服務項目">個案體況改變，希望評估增加服務項目</option>
-                  <option value="主要照顧者壓力較大，需安排喘息服務">主要照顧者壓力較大，需安排喘息服務</option>
-                  <option value="其他（請於下方說明）">其他（請於下方說明）</option>
-                </select>
-              </div>
-
-              <!-- 預設隱藏的「其他狀況」輸入框 -->
-              <div class="mb-3 d-none" id="otherStatusDiv">
-                <label for="otherStatus" class="form-label">請簡述其他狀況</label>
-                <input type="text" class="form-control" id="otherStatus" name="其他狀況說明">
-              </div>
-
-              <!-- 近況回報/留言 -->
-              <div class="mb-3">
-                <label for="message" class="form-label">近況更新或需協助事項</label>
-                <textarea class="form-control" id="message" name="留言內容" rows="5" required></textarea>
-              </div>
-
-              <!-- 送出按鈕 -->
-              <button type="submit" class="btn btn-primary w-100">送出回報</button>
-              
-              <!-- 用來顯示成功或失敗的訊息區塊 -->
-              <p id="my-form-status" class="mt-3 text-center fw-bold"></p>
-            </form>
-            <!-- 表單結束 -->
-
-          </div>
+    <!-- 頂部標頭 -->
+    <div class="header-bg text-center mb-4">
+        <div class="container">
+            <span class="badge bg-light text-teal mb-2 px-3 py-2 rounded-pill fw-bold text-dark shadow-sm">
+                <i class="fa-solid fa-hands-holding-child me-1 text-teal"></i> 家屬溫馨連線與關懷回饋
+            </span>
+            <h1 class="h3 fw-bold mb-2">長輩健康與服務使用狀況填報</h1>
+            <p class="mb-0 text-light opacity-75">免去電話聯繫的等候，</p>
         </div>
-      </div>
     </div>
-  </div>
 
-  <!-- 互動與送出邏輯腳本 -->
-  <script>
-    document.addEventListener("DOMContentLoaded", function() {
-      
-      // --- 1. 電話選項動態切換邏輯 ---
-      const callMobile = document.getElementById("callMobile");
-      const callLandline = document.getElementById("callLandline");
-      const mobileDiv = document.getElementById("mobileDiv");
-      const landlineDiv = document.getElementById("landlineDiv");
-      const mobileInput = document.getElementById("mobileInput");
-      const landlineInput = document.getElementById("landlineInput");
+    <div class="container pb-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 col-md-10">
+                
+                <!-- 填寫表單主卡片 -->
+                <div class="card card-custom p-4 p-md-5 bg-white mb-4" id="formCard">
+                    
+                    <form id="feedbackForm" action="https://formspree.io/f/mvkkggvn" method="POST">
+                        
+                        <!-- 基本資料區塊 -->
+                        <div class="mb-5">
+                            <h4 class="section-title"><i class="fa-solid fa-user-pen me-2"></i>基本資料填寫</h4>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label for="elderName" class="form-label fw-bold">長輩姓名 <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="elderName" name="長輩姓名" required placeholder="請輸入長輩全名">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="familyName" class="form-label fw-bold">填寫家屬姓名 <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="familyName" name="填寫家屬姓名" required placeholder="請輸入您的姓名">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="fillDate" class="form-label fw-bold">填寫日期 <span class="text-danger">*</span></label>
+                                    <input type="date" class="form-control" id="fillDate" name="填寫日期" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="unit" class="form-label fw-bold">指定單位 / 據點</label>
+                                    <input type="text" class="form-control" id="unit" name="指定單位" placeholder="例如：日照中心 / 居家服務單位">
+                                </div>
+                            </div>
+                        </div>
 
-      function updatePhoneFields() {
-        if (callMobile.checked) {
-          mobileDiv.classList.remove("d-none");
-          mobileInput.setAttribute("required", "");
-          landlineDiv.classList.add("d-none");
-          landlineInput.removeAttribute("required");
-          landlineInput.value = "";
-        } else if (callLandline.checked) {
-          landlineDiv.classList.remove("d-none");
-          landlineInput.setAttribute("required", "");
-          mobileDiv.classList.add("d-none");
-          mobileInput.removeAttribute("required");
-          mobileInput.value = "";
-        }
-      }
+                        <!-- 一、身體健康狀況 -->
+                        <div class="mb-5">
+                            <h4 class="section-title"><i class="fa-solid fa-heart-pulse me-2"></i>一、身體健康狀況</h4>
+                            <div class="d-flex flex-column gap-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="身體健康狀況" id="health1" value="穩定(無新病徵或急性症狀)" checked>
+                                    <label class="form-check-label" for="health1">1. 穩定 (無新病徵或急性症狀)</label>
+                                </div>
+                                
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="身體健康狀況" id="health2" value="微恙">
+                                    <label class="form-check-label" for="health2">2. 微恙 (小病痛)</label>
+                                    <div class="conditional-box" id="box-health2">
+                                        <input type="text" class="form-control" name="微恙說明" placeholder="請簡述微恙狀況（例如：輕微感冒、流鼻水）">
+                                    </div>
+                                </div>
 
-      callMobile.addEventListener("change", updatePhoneFields);
-      callLandline.addEventListener("change", updatePhoneFields);
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="身體健康狀況" id="health3" value="新病症">
+                                    <label class="form-check-label" for="health3">3. 新病症</label>
+                                    <div class="conditional-box" id="box-health3">
+                                        <input type="text" class="form-control" name="新病症疾病" placeholder="請填寫新發生之疾病名稱">
+                                    </div>
+                                </div>
 
-      // --- 2. 下拉選單動態顯示「其他」欄位邏輯 ---
-      const caseStatusSelect = document.getElementById("caseStatus");
-      const otherStatusDiv = document.getElementById("otherStatusDiv");
-      const otherStatusInput = document.getElementById("otherStatus");
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="身體健康狀況" id="health4" value="急診">
+                                    <label class="form-check-label" for="health4">4. 急診</label>
+                                    <div class="conditional-box" id="box-health4">
+                                        <input type="text" class="form-control" name="急診疾病原因" placeholder="請填寫送急診之疾病或原因">
+                                    </div>
+                                </div>
 
-      caseStatusSelect.addEventListener("change", function() {
-        if (this.value === "其他（請於下方說明）") {
-          otherStatusDiv.classList.remove("d-none");
-          otherStatusInput.setAttribute("required", "");
-        } else {
-          otherStatusDiv.classList.add("d-none");
-          otherStatusInput.removeAttribute("required");
-          otherStatusInput.value = ""; 
-        }
-      });
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="身體健康狀況" id="health5" value="其他">
+                                    <label class="form-check-label" for="health5">5. 其他</label>
+                                    <div class="conditional-box" id="box-health5">
+                                        <input type="text" class="form-control" name="身體狀況其他說明" placeholder="請填寫其他身體狀況說明">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
-      // --- 3. AJAX 不跳轉送出邏輯 (含 2 秒後自動跳轉) ---
-      const form = document.getElementById("my-form");
-      const status = document.getElementById("my-form-status");
+                        <!-- 二、生活作息 -->
+                        <div class="mb-5">
+                            <h4 class="section-title"><i class="fa-solid fa-bed me-2"></i>二、生活作息</h4>
+                            <div class="d-flex flex-column gap-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="生活作息" id="routine1" value="穩定" checked>
+                                    <label class="form-check-label" for="routine1">1. 穩定</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="生活作息" id="routine2" value="夜間易醒 睡眠品質不佳">
+                                    <label class="form-check-label" for="routine2">2. 夜間易醒 睡眠品質不佳</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="生活作息" id="routine3" value="日夜顛倒">
+                                    <label class="form-check-label" for="routine3">3. 日夜顛倒</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="生活作息" id="routine4" value="其他">
+                                    <label class="form-check-label" for="routine4">4. 其他</label>
+                                    <div class="conditional-box" id="box-routine4">
+                                        <input type="text" class="form-control" name="生活作息其他說明" placeholder="請填寫其他生活作息狀況">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
-      async function handleSubmit(event) {
-        event.preventDefault();
-        const data = new FormData(event.target);
-        
-        const btn = form.querySelector('button[type="submit"]');
-        btn.disabled = true;
-        btn.innerText = "處理中...";
+                        <!-- 三、飲食 -->
+                        <div class="mb-5">
+                            <h4 class="section-title"><i class="fa-solid fa-utensils me-2"></i>三、飲食</h4>
+                            <div class="row g-2">
+                                <div class="col-6 col-md-4">
+                                    <div class="form-check p-3 border rounded-3 bg-light h-100">
+                                        <input class="form-check-input" type="radio" name="飲食狀況" id="diet1" value="正常" checked>
+                                        <label class="form-check-label fw-medium" for="diet1">1. 正常</label>
+                                    </div>
+                                </div>
+                                <div class="col-6 col-md-4">
+                                    <div class="form-check p-3 border rounded-3 bg-light h-100">
+                                        <input class="form-check-input" type="radio" name="飲食狀況" id="diet2" value="少量">
+                                        <label class="form-check-label fw-medium" for="diet2">2. 少量</label>
+                                    </div>
+                                </div>
+                                <div class="col-6 col-md-4">
+                                    <div class="form-check p-3 border rounded-3 bg-light h-100">
+                                        <input class="form-check-input" type="radio" name="飲食狀況" id="diet3" value="微量">
+                                        <label class="form-check-label fw-medium" for="diet3">3. 微量</label>
+                                    </div>
+                                </div>
+                                <div class="col-6 col-md-4">
+                                    <div class="form-check p-3 border rounded-3 bg-light h-100">
+                                        <input class="form-check-input" type="radio" name="飲食狀況" id="diet4" value="食慾好">
+                                        <label class="form-check-label fw-medium" for="diet4">4. 食慾好</label>
+                                    </div>
+                                </div>
+                                <div class="col-6 col-md-4">
+                                    <div class="form-check p-3 border rounded-3 bg-light h-100">
+                                        <input class="form-check-input" type="radio" name="飲食狀況" id="diet5" value="食慾差">
+                                        <label class="form-check-label fw-medium" for="diet5">5. 食慾差</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
-        fetch(event.target.action, {
-          method: form.method,
-          body: data,
-          headers: { 'Accept': 'application/json' }
-        }).then(response => {
-          if (response.ok) {
-            status.innerHTML = "回報已成功送出！將於 2 秒後自動返回單位首頁...";
-            status.className = "mt-3 text-center fw-bold text-success";
-            form.reset();
-            
-            // 重置動態欄位狀態
-            otherStatusDiv.classList.add("d-none");
-            otherStatusInput.removeAttribute("required");
-            mobileDiv.classList.add("d-none");
-            mobileInput.removeAttribute("required");
-            landlineDiv.classList.add("d-none");
-            landlineInput.removeAttribute("required");
-            
-            // 延遲 2 秒後自動跳轉 (請將網址替換為您的單位網頁)
-            setTimeout(function() {
-                window.location.href = "https://你的長照單位網址.com";
-            }, 2000);
+                        <!-- 四、疼痛情形 -->
+                        <div class="mb-5">
+                            <h4 class="section-title"><i class="fa-solid fa-face-frown-open me-2"></i>四、疼痛情形</h4>
+                            <div class="d-flex flex-column gap-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="疼痛情形" id="pain1" value="無" checked>
+                                    <label class="form-check-label" for="pain1">1. 無</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="疼痛情形" id="pain2" value="有(陳年舊疾)">
+                                    <label class="form-check-label" for="pain2">2. 有 (陳年舊疾)</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="疼痛情形" id="pain3" value="有(新的疼痛)">
+                                    <label class="form-check-label" for="pain3">3. 有 (新的疼痛)</label>
+                                </div>
+                            </div>
+                        </div>
 
-          } else {
-            response.json().then(data => {
-              if (Object.hasOwn(data, 'errors')) {
-                status.innerHTML = data["errors"].map(error => error["message"]).join(", ");
-              } else {
-                status.innerHTML = "糟糕！送出表單時發生問題。";
-              }
-              status.className = "mt-3 text-center fw-bold text-danger";
-            })
-          }
-        }).catch(error => {
-          status.innerHTML = "糟糕！送出表單時發生網路問題。";
-          status.className = "mt-3 text-center fw-bold text-danger";
-        }).finally(() => {
-          btn.disabled = false;
-          btn.innerText = "送出回報";
+                        <!-- 五、服務品質 -->
+                        <div class="mb-5">
+                            <h4 class="section-title"><i class="fa-solid fa-star-half-stroke me-2"></i>五、服務品質</h4>
+                            <p class="text-muted small mb-3"><i class="fa-solid fa-circle-info me-1"></i>評分範圍包含：<strong>態度、服務品質、準時性</strong>等綜合表現。</p>
+                            <div class="d-flex flex-column gap-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="服務品質" id="service1" value="良好" checked>
+                                    <label class="form-check-label" for="service1">1. 良好</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="服務品質" id="service2" value="尚可">
+                                    <label class="form-check-label" for="service2">2. 尚可</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="服務品質" id="service3" value="不佳">
+                                    <label class="form-check-label" for="service3">3. 不佳</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 六、調整服務需求 -->
+                        <div class="mb-5">
+                            <h4 class="section-title"><i class="fa-solid fa-sliders me-2"></i>六、調整服務需求</h4>
+                            <div class="d-flex flex-column gap-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="調整服務需求" id="adjust1" value="有" data-toggle="adjust-detail">
+                                    <label class="form-check-label" for="adjust1">1. 有 (請個管回電討論)</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="調整服務需求" id="adjust2" value="無" checked data-toggle="adjust-detail">
+                                    <label class="form-check-label" for="adjust2">2. 無 (維持)</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 七、喘息需求 -->
+                        <div class="mb-5">
+                            <h4 class="section-title"><i class="fa-solid fa-calendar-check me-2"></i>七、喘息需求</h4>
+                            <div class="d-flex flex-column gap-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="喘息需求" id="respite1" value="有" data-toggle="respite-detail">
+                                    <label class="form-check-label" for="respite1">1. 有 (請個管回電討論)</label>
+                                    <div class="conditional-box" id="box-respite">
+                                        <label for="respiteTime" class="form-label text-muted small fw-bold">希望聯繫日期 / 時段：</label>
+                                        <input type="text" class="form-control" id="respiteTime" name="喘息需求希望聯繫日期時段" placeholder="例如：下週一上午、或隨時皆可">
+                                    </div>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="喘息需求" id="respite2" value="無" checked data-toggle="respite-detail">
+                                    <label class="form-check-label" for="respite2">2. 無</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 提交按鈕 -->
+                        <div class="d-grid mt-4">
+                            <button type="submit" class="btn btn-primary-custom btn-lg shadow-sm" id="submitBtn">
+                                <i class="fa-solid fa-paper-plane me-2"></i>確認無誤，送出回饋
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- 提交成功後的畫面 (隱藏狀態) -->
+                <div class="card card-custom p-5 text-center bg-white success-overlay" id="successCard">
+                    <div class="mb-4 text-teal">
+                        <i class="fa-solid fa-circle-check fa-4x text-success"></i>
+                    </div>
+                    <h3 class="fw-bold text-dark mb-3">回饋資料已成功送出！</h3>
+                    <p class="text-muted mb-4">非常感謝您的填寫與協助。您的回饋已自動傳送至個管員信箱，我們將持續守護長輩的健康與生活品質。</p>
+                    <div class="d-grid gap-2 col-md-6 mx-auto">
+                        <button class="btn btn-primary-custom" onclick="resetForm()">
+                            <i class="fa-solid fa-rotate-right me-2"></i>再次填寫 / 新增回饋
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // 自動帶入今天日期
+        document.getElementById('fillDate').valueAsDate = new Date();
+
+        // 動態顯示/隱藏補充欄位 (身體健康狀況)
+        const healthRadios = document.querySelectorAll('input[name="身體健康狀況"]');
+        healthRadios.forEach(radio => {
+            radio.addEventListener('change', function() {
+                // 隱藏所有健康狀況的補充框
+                document.querySelectorAll('#box-health2, #box-health3, #box-health4, #box-health5').forEach(box => {
+                    box.style.display = 'none';
+                });
+                // 顯示對應的補充框
+                if(this.id === 'health2') document.getElementById('box-health2').style.display = 'block';
+                if(this.id === 'health3') document.getElementById('box-health3').style.display = 'block';
+                if(this.id === 'health4') document.getElementById('box-health4').style.display = 'block';
+                if(this.id === 'health5') document.getElementById('box-health5').style.display = 'block';
+            });
         });
-      }
-      form.addEventListener("submit", handleSubmit);
-    });
-  </script>
+
+        // 動態顯示/隱藏生活作息其他框
+        const routineRadios = document.querySelectorAll('input[name="生活作息"]');
+        routineRadios.forEach(radio => {
+            radio.addEventListener('change', function() {
+                const box = document.getElementById('box-routine4');
+                box.style.display = (this.id === 'routine4') ? 'block' : 'none';
+            });
+        });
+
+        // 動態顯示/隱藏喘息需求細節框
+        const respiteRadios = document.querySelectorAll('input[name="喘息需求"]');
+        respiteRadios.forEach(radio => {
+            radio.addEventListener('change', function() {
+                const box = document.getElementById('box-respite');
+                box.style.display = (this.id === 'respite1') ? 'block' : 'none';
+            });
+        });
+
+        // Formspree 非同步 AJAX 提交處理
+        const form = document.getElementById('feedbackForm');
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-2"></i>傳送中...';
+
+            const formData = new FormData(form);
+
+            try {
+                const response = await fetch(form.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    document.getElementById('formCard').style.display = 'none';
+                    document.getElementById('successCard').style.display = 'block';
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                } else {
+                    alert('送出時發生錯誤，請稍後再試或直接聯繫個管員。');
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '<i class="fa-solid fa-paper-plane me-2"></i>確認無誤，送出回饋';
+                }
+            } catch (error) {
+                alert('網路連線異常，請檢查您的網路狀態。');
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fa-solid fa-paper-plane me-2"></i>確認無誤，送出回饋';
+            }
+        });
+
+        // 重置表單畫面
+        function resetForm() {
+            form.reset();
+            document.getElementById('fillDate').valueAsDate = new Date();
+            document.querySelectorAll('.conditional-box').forEach(box => box.style.display = 'none');
+            document.getElementById('successCard').style.display = 'none';
+            document.getElementById('formCard').style.display = 'block';
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<i class="fa-solid fa-paper-plane me-2"></i>確認無誤，送出回饋';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
 </body>
 </html>
