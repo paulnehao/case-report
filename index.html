@@ -6,7 +6,7 @@
     <title>長照家屬主動回饋與健康狀況填報系統</title>
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Google Fonts Inter & Noto Sans TC -->
+    <!-- Google Fonts Noto Sans TC -->
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -80,7 +80,7 @@
                 <i class="fa-solid fa-hands-holding-child me-1 text-teal"></i> 家屬溫馨連線與關懷回饋
             </span>
             <h1 class="h3 fw-bold mb-2">長輩健康與服務使用狀況填報</h1>
-            <p class="mb-0 text-light opacity-75">免去電話聯繫的等候，</p>
+            <p class="mb-0 text-light opacity-75">免去電話聯繫的等候，主動線上回報</p>
         </div>
     </div>
 
@@ -102,12 +102,22 @@
                                     <input type="text" class="form-control" id="elderName" name="長輩姓名" required placeholder="請輸入長輩全名">
                                 </div>
                                 <div class="col-md-6">
-                                    <label for="familyName" class="form-label fw-bold">填寫家屬姓名 <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" id="familyName" name="填寫家屬姓名" required placeholder="請輸入您的姓名">
-                                </div>
-                                <div class="col-md-6">
                                     <label for="fillDate" class="form-label fw-bold">填寫日期 <span class="text-danger">*</span></label>
                                     <input type="date" class="form-control" id="fillDate" name="填寫日期" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="relationSelect" class="form-label fw-bold">填寫人與個案關係 <span class="text-danger">*</span></label>
+                                    <select class="form-select" id="relationSelect" name="填寫人與個案關係" required>
+                                        <option value="" selected disabled>請選擇關係</option>
+                                        <option value="配偶">配偶</option>
+                                        <option value="案子">案子 (兒子)</option>
+                                        <option value="案女">案女 (女兒)</option>
+                                        <option value="其他">其他</option>
+                                    </select>
+                                    <!-- 選擇「其他」時跳出的自訂輸入框 -->
+                                    <div class="mt-2 d-none" id="otherRelationDiv">
+                                        <input type="text" class="form-control" id="otherRelationInput" name="填寫人關係其他說明" placeholder="請註明與個案關係（例如：媳婦、孫女）">
+                                    </div>
                                 </div>
                                 <div class="col-md-6">
                                     <label for="unit" class="form-label fw-bold">指定單位 / 據點</label>
@@ -266,30 +276,57 @@
                             <h4 class="section-title"><i class="fa-solid fa-sliders me-2"></i>六、調整服務需求</h4>
                             <div class="d-flex flex-column gap-3">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="調整服務需求" id="adjust1" value="有" data-toggle="adjust-detail">
+                                    <input class="form-check-input" type="radio" name="調整服務需求" id="adjust1" value="有">
                                     <label class="form-check-label" for="adjust1">1. 有 (請個管回電討論)</label>
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="調整服務需求" id="adjust2" value="無" checked data-toggle="adjust-detail">
+                                    <input class="form-check-input" type="radio" name="調整服務需求" id="adjust2" value="無" checked>
                                     <label class="form-check-label" for="adjust2">2. 無 (維持)</label>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- 七、喘息需求 -->
+                        <!-- 七、喘息需求 (依需求優化：文字輸入 或 日曆/24小時點選) -->
                         <div class="mb-5">
                             <h4 class="section-title"><i class="fa-solid fa-calendar-check me-2"></i>七、喘息需求</h4>
                             <div class="d-flex flex-column gap-3">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="喘息需求" id="respite1" value="有" data-toggle="respite-detail">
+                                    <input class="form-check-input" type="radio" name="喘息需求" id="respite1" value="有">
                                     <label class="form-check-label" for="respite1">1. 有 (請個管回電討論)</label>
+                                    
+                                    <!-- 選擇「有」之後展開的 2 個子選項 -->
                                     <div class="conditional-box" id="box-respite">
-                                        <label for="respiteTime" class="form-label text-muted small fw-bold">希望聯繫日期 / 時段：</label>
-                                        <input type="text" class="form-control" id="respiteTime" name="喘息需求希望聯繫日期時段" placeholder="例如：下週一上午、或隨時皆可">
+                                        <p class="fw-bold small text-teal mb-2">請選擇您偏好的聯繫預約方式：</p>
+                                        
+                                        <!-- 子選項 (1)：文字輸入欄位 -->
+                                        <div class="form-check mb-2">
+                                            <input class="form-check-input" type="radio" name="喘息聯繫方式" id="respiteType1" value="文字描述時段" checked>
+                                            <label class="form-check-label small" for="respiteType1">(1) 希望聯繫日期 / 時段（文字描述）</label>
+                                        </div>
+                                        <div class="mb-3" id="subBox-text">
+                                            <input type="text" class="form-control" name="喘息希望聯繫日期時段文字" placeholder="例如：下週一上午、或隨時皆可">
+                                        </div>
+
+                                        <!-- 子選項 (2)：日曆 + 24小時制時間點選 -->
+                                        <div class="form-check mb-2">
+                                            <input class="form-check-input" type="radio" name="喘息聯繫方式" id="respiteType2" value="精確日期時間">
+                                            <label class="form-check-label small" for="respiteType2">(2) 家屬直接點選需要日期及時間 (日曆/24小時制)</label>
+                                        </div>
+                                        <div class="row g-2 d-none" id="subBox-datetime">
+                                            <div class="col-md-7">
+                                                <label class="form-label text-muted small">選擇日期：</label>
+                                                <input type="date" class="form-control" name="喘息預約日期">
+                                            </div>
+                                            <div class="col-md-5">
+                                                <label class="form-label text-muted small">選擇時間 (24小時制)：</label>
+                                                <input type="time" class="form-control" name="喘息預約時間">
+                                            </div>
+                                        </div>
+
                                     </div>
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="喘息需求" id="respite2" value="無" checked data-toggle="respite-detail">
+                                    <input class="form-check-input" type="radio" name="喘息需求" id="respite2" value="無" checked>
                                     <label class="form-check-label" for="respite2">2. 無</label>
                                 </div>
                             </div>
@@ -328,15 +365,29 @@
         // 自動帶入今天日期
         document.getElementById('fillDate').valueAsDate = new Date();
 
+        // 填寫人與個案關係：選擇「其他」時顯示自訂輸入框
+        const relationSelect = document.getElementById('relationSelect');
+        const otherRelationDiv = document.getElementById('otherRelationDiv');
+        const otherRelationInput = document.getElementById('otherRelationInput');
+
+        relationSelect.addEventListener('change', function() {
+            if(this.value === '其他') {
+                otherRelationDiv.classList.remove('d-none');
+                otherRelationInput.setAttribute('required', 'required');
+            } else {
+                otherRelationDiv.classList.add('d-none');
+                otherRelationInput.removeAttribute('required');
+                otherRelationInput.value = '';
+            }
+        });
+
         // 動態顯示/隱藏補充欄位 (身體健康狀況)
         const healthRadios = document.querySelectorAll('input[name="身體健康狀況"]');
         healthRadios.forEach(radio => {
             radio.addEventListener('change', function() {
-                // 隱藏所有健康狀況的補充框
                 document.querySelectorAll('#box-health2, #box-health3, #box-health4, #box-health5').forEach(box => {
                     box.style.display = 'none';
                 });
-                // 顯示對應的補充框
                 if(this.id === 'health2') document.getElementById('box-health2').style.display = 'block';
                 if(this.id === 'health3') document.getElementById('box-health3').style.display = 'block';
                 if(this.id === 'health4') document.getElementById('box-health4').style.display = 'block';
@@ -353,12 +404,28 @@
             });
         });
 
-        // 動態顯示/隱藏喘息需求細節框
+        // 喘息需求：勾選「有」時顯示細節區塊
         const respiteRadios = document.querySelectorAll('input[name="喘息需求"]');
         respiteRadios.forEach(radio => {
             radio.addEventListener('change', function() {
                 const box = document.getElementById('box-respite');
                 box.style.display = (this.id === 'respite1') ? 'block' : 'none';
+            });
+        });
+
+        // 喘息需求內部：切換 (1) 文字輸入 vs (2) 日曆/24小時制
+        const respiteTypeRadios = document.querySelectorAll('input[name="喘息聯繫方式"]');
+        respiteTypeRadios.forEach(radio => {
+            radio.addEventListener('change', function() {
+                const subText = document.getElementById('subBox-text');
+                const subDatetime = document.getElementById('subBox-datetime');
+                if(this.id === 'respiteType1') {
+                    subText.classList.remove('d-none');
+                    subDatetime.classList.add('d-none');
+                } else {
+                    subText.classList.add('d-none');
+                    subDatetime.classList.remove('d-none');
+                }
             });
         });
 
@@ -402,13 +469,10 @@
             form.reset();
             document.getElementById('fillDate').valueAsDate = new Date();
             document.querySelectorAll('.conditional-box').forEach(box => box.style.display = 'none');
+            document.getElementById('otherRelationDiv').classList.add('d-none');
+            document.getElementById('subBox-text').classList.remove('d-none');
+            document.getElementById('subBox-datetime').classList.add('d-none');
             document.getElementById('successCard').style.display = 'none';
             document.getElementById('formCard').style.display = 'block';
             const submitBtn = document.getElementById('submitBtn');
             submitBtn.disabled = false;
-            submitBtn.innerHTML = '<i class="fa-solid fa-paper-plane me-2"></i>確認無誤，送出回饋';
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-    </script>
-</body>
-</html>
